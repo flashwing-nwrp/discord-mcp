@@ -329,13 +329,19 @@ public class PermissionService {
             throw new IllegalArgumentException("Channel not found by channelId");
         }
 
-        var permContainer = channel.getPermissionContainer();
-        if (permContainer.getParentCategory() == null) {
+        // Check if channel supports categories
+        if (!(channel instanceof net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel)) {
+            throw new IllegalArgumentException("This channel type does not support categories");
+        }
+
+        var categorizableChannel = (net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel) channel;
+        var category = categorizableChannel.getParentCategory();
+
+        if (category == null) {
             throw new IllegalArgumentException("Channel has no parent category to sync with");
         }
 
-        // JDA doesn't have a direct sync method, so we copy permissions
-        var category = permContainer.getParentCategory();
+        var permContainer = channel.getPermissionContainer();
 
         // Clear existing overrides
         for (var override : permContainer.getPermissionOverrides()) {
