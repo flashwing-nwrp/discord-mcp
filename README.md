@@ -34,17 +34,10 @@ Enable your AI assistants to seamlessly interact with Discord. Manage channels, 
 
 ## 🔬 Installation
 
-### ► 🐳 Docker Installation (Recommended)
-> NOTE: Docker installation is required. Full instructions can be found on [docker.com](https://www.docker.com/products/docker-desktop/).
+### ► 🐳 Pre-built Docker Image (Recommended)
 
-Build and run locally:
-```bash
-git clone https://github.com/flashwing-nwrp/discord-mcp
-cd discord-mcp
-docker build -t discord-mcp .
-```
+Use the pre-built image from GitHub Container Registry - no local Docker build required:
 
-Add to your MCP client configuration:
 ```json
 {
   "mcpServers": {
@@ -54,12 +47,33 @@ Add to your MCP client configuration:
         "run", "--rm", "-i",
         "-e", "DISCORD_TOKEN=<YOUR_DISCORD_BOT_TOKEN>",
         "-e", "DISCORD_GUILD_ID=<YOUR_SERVER_ID>",
-        "discord-mcp"
+        "ghcr.io/flashwing-nwrp/discord-mcp:latest"
       ]
     }
   }
 }
 ```
+
+For Claude Code:
+```bash
+claude mcp add discord-mcp -- docker run --rm -i -e DISCORD_TOKEN=<TOKEN> -e DISCORD_GUILD_ID=<ID> ghcr.io/flashwing-nwrp/discord-mcp:latest
+```
+
+<details>
+    <summary style="font-size: 1.35em; font-weight: bold;">
+        🔨 Build Docker Image Locally
+    </summary>
+
+If you prefer to build locally:
+```bash
+git clone https://github.com/flashwing-nwrp/discord-mcp
+cd discord-mcp
+docker build -t discord-mcp .
+```
+
+Then use `discord-mcp` instead of `ghcr.io/flashwing-nwrp/discord-mcp:latest` in your configuration.
+
+</details>
 
 <details>
     <summary style="font-size: 1.35em; font-weight: bold;">
@@ -102,18 +116,6 @@ The Discord MPC server can be configured by adding the following to your configu
 }
 ```
 The `DISCORD_GUILD_ID` environment variable is optional. When provided, it sets a default Discord server ID so any tool that accepts a `guildId` parameter can omit it.
-
-</details>
-
-<details>
-    <summary style="font-size: 1.35em; font-weight: bold;">
-        ⌨️ Claude Code Installation
-    </summary>
-
-Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
-```bash
-claude mcp add discord-mcp -- docker run --rm -i -e DISCORD_TOKEN=<YOUR_DISCORD_BOT_TOKEN> -e DISCORD_GUILD_ID=<YOUR_SERVER_ID> discord-mcp
-```
 
 </details>
 
